@@ -28,7 +28,8 @@ export default function NewOfferingPage() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setEvents(data);
+          const unique = Array.from(new Map(data.map((e: any) => [e.name, e])).values());
+          setEvents(unique);
         }
       })
       .catch(() => {});
@@ -38,7 +39,8 @@ export default function NewOfferingPage() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setCategories(data);
+          const unique = Array.from(new Map(data.map((c: any) => [c.name, c])).values());
+          setCategories(unique);
         }
       })
       .catch(() => {});

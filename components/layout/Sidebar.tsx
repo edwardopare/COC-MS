@@ -2,17 +2,39 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface NavItem { label: string; href: string; icon: React.ReactNode; }
 
 function NavLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
   const pathname = usePathname();
   const active = pathname.startsWith(item.href);
+  const [badgeCount, setBadgeCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (item.label === "Approvals") {
+      fetch("/api/stats")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && typeof data.pendingExpenses === "number") {
+            setBadgeCount(data.pendingExpenses);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [item.label]);
+
   return (
-    <Link href={item.href} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${active ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"}`}>
-      <span className="flex-shrink-0 w-5 h-5">{item.icon}</span>
-      {!collapsed && <span>{item.label}</span>}
+    <Link href={item.href} className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${active ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"}`}>
+      <div className="flex items-center gap-3">
+        <span className="flex-shrink-0 w-5 h-5">{item.icon}</span>
+        {!collapsed && <span>{item.label}</span>}
+      </div>
+      {badgeCount !== null && badgeCount > 0 && (
+        <span className="px-1.5 py-0.5 text-xs font-bold rounded-full bg-amber-500 text-slate-950">
+          {badgeCount}
+        </span>
+      )}
     </Link>
   );
 }
@@ -30,7 +52,7 @@ const financeNav: NavItem[] = [
   { label: "Dashboard", href: "/finance/dashboard", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M3 3h18v18H3z"/><path strokeLinecap="round" d="M3 9h18M9 21V9"/></svg> },
   { label: "Income", href: "/finance/income", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
   { label: "Pledges", href: "/finance/pledges", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
-  { label: "Expenses", href: "/finance/expenses", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg> },
+  { label: "Approvals", href: "/finance/expenses", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg> },
   { label: "Budgets", href: "/finance/budgets", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> },
   { label: "Reports", href: "/finance/reports", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> },
 ];

@@ -32,7 +32,8 @@ export default function NewExpensePage() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setCategories(data);
+          const unique = Array.from(new Map(data.map((c: any) => [c.name, c])).values());
+          setCategories(unique);
         }
       })
       .catch(() => {});

@@ -23,7 +23,10 @@ export default function NewTithePage() {
       .then((res) => res.json())
       .then((data) => {
         if (data && Array.isArray(data.data)) {
-          setMembers(data.data);
+          const unique = Array.from(
+            new Map(data.data.map((m: any) => [`${m.firstName} ${m.lastName}`, m])).values()
+          );
+          setMembers(unique as any);
         }
       })
       .catch(() => {});

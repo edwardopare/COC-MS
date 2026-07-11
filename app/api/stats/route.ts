@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { count, eq, gte, and } from "drizzle-orm";
+import { count, eq, gte, and, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { members, events, expenses, tithes, offerings } from "@/lib/db/schema";
 import { requireRole, apiSuccess } from "@/lib/api-utils";
@@ -45,11 +45,27 @@ export async function GET(request: NextRequest) {
   const totalOffering = offeringsRows.reduce((sum, r) => sum + parseFloat(r.amount), 0);
   const totalIncome = totalTithe + totalOffering;
 
+  // Calculate Expense sums (approved + paid)
+  const expensesRows = await db
+    .select({ amount: expenses.amount })
+    .from(expenses)
+    .where(
+      and(
+        eq(expenses.isDeleted, false),
+        or(eq(expenses.status, "approved"), eq(expenses.status, "paid"))
+      )
+    );
+
+  const totalExpense = expensesRows.reduce((sum, r) => sum + parseFloat(r.amount), 0);
+  const availableAmount = totalIncome - totalExpense;
+
   return apiSuccess({
     totalMembers: totalMem.count,
     newMembersThisMonth: newMem.count,
     eventsThisWeek: eventsThisWeek.count,
     pendingExpenses: pendingExp.count,
     totalIncome,
+    totalExpense,
+    availableAmount,
   });
 }

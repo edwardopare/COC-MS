@@ -31,7 +31,8 @@ export default function AttendancePage() {
       const res = await fetch("/api/events");
       if (res.ok) {
         const data = await res.json();
-        setEvents(data);
+        const unique = Array.from(new Map(data.map((e: any) => [e.name, e])).values()) as EventOption[];
+        setEvents(unique);
         setEventsLoaded(true);
       }
     } catch {

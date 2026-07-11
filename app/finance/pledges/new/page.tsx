@@ -35,7 +35,10 @@ export default function NewPledgePage() {
       if (memRes.ok) {
         const memData = await memRes.json();
         if (memData && Array.isArray(memData.data)) {
-          setMembers(memData.data);
+          const unique = Array.from(
+            new Map(memData.data.map((m: any) => [`${m.firstName} ${m.lastName}`, m])).values()
+          );
+          setMembers(unique as any);
         }
       }
 
@@ -44,7 +47,8 @@ export default function NewPledgePage() {
       if (campRes.ok) {
         const campData = await campRes.json();
         if (Array.isArray(campData)) {
-          setCampaigns(campData);
+          const unique = Array.from(new Map(campData.map((c: any) => [c.name, c])).values());
+          setCampaigns(unique);
         }
       }
 
