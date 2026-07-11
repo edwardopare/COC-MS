@@ -113,7 +113,7 @@ export default function ExpensesPage() {
               expenses.map((expense) => (
                 <tr key={expense.id} className="border-b border-white/5 hover:bg-white/5 transition">
                   <td className="px-4 py-3.5 text-white font-medium">{expense.description}</td>
-                  <td className="px-4 py-3.5 text-white font-mono">${parseFloat(expense.amount).toFixed(2)}</td>
+                  <td className="px-4 py-3.5 text-white font-mono">GH₵{parseFloat(expense.amount).toFixed(2)}</td>
                   <td className="px-4 py-3.5 text-slate-300">{expense.periodMonth}</td>
                   <td className="px-4 py-3.5">
                     <span

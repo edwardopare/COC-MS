@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       .select()
       .from(tithes)
       .where(and(gte(tithes.createdAt, fromDate), lte(tithes.createdAt, toDate)));
-    return apiSuccess({ columns: ["Receipt #", "Amount", "Method", "Period", "Date"], rows: rows.map(r => [r.receiptNumber ?? "—", `$${parseFloat(r.amount).toFixed(2)}`, r.paymentMethod, r.periodMonth, new Date(r.createdAt).toLocaleDateString()]) });
+    return apiSuccess({ columns: ["Receipt #", "Amount", "Method", "Period", "Date"], rows: rows.map(r => [r.receiptNumber ?? "—", `GH₵${parseFloat(r.amount).toFixed(2)}`, r.paymentMethod, r.periodMonth, new Date(r.createdAt).toLocaleDateString()]) });
   }
 
   if (type === "offering-report") {
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       .select()
       .from(offerings)
       .where(and(gte(offerings.createdAt, fromDate), lte(offerings.createdAt, toDate)));
-    return apiSuccess({ columns: ["Receipt #", "Amount", "Method", "Date"], rows: rows.map(r => [r.receiptNumber ?? "—", `$${parseFloat(r.amount).toFixed(2)}`, r.paymentMethod, new Date(r.createdAt).toLocaleDateString()]) });
+    return apiSuccess({ columns: ["Receipt #", "Amount", "Method", "Date"], rows: rows.map(r => [r.receiptNumber ?? "—", `GH₵${parseFloat(r.amount).toFixed(2)}`, r.paymentMethod, new Date(r.createdAt).toLocaleDateString()]) });
   }
 
   if (type === "expense-report") {
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       .select()
       .from(expenses)
       .where(and(gte(expenses.createdAt, fromDate), lte(expenses.createdAt, toDate)));
-    return apiSuccess({ columns: ["Description", "Amount", "Status", "Date"], rows: rows.map(r => [r.description, `$${parseFloat(r.amount).toFixed(2)}`, r.status, new Date(r.createdAt).toLocaleDateString()]) });
+    return apiSuccess({ columns: ["Description", "Amount", "Status", "Date"], rows: rows.map(r => [r.description, `GH₵${parseFloat(r.amount).toFixed(2)}`, r.status, new Date(r.createdAt).toLocaleDateString()]) });
   }
 
   if (type === "pledge-report" || type === "outstanding-pledges") {
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
       .where(
         type === "outstanding-pledges" ? eq(pledges.status, "active") : undefined
       );
-    return apiSuccess({ columns: ["Pledged Amount", "Paid Amount", "Status", "Due Date"], rows: rows.map(r => [`$${parseFloat(r.pledgedAmount).toFixed(2)}`, `$${parseFloat(r.paidAmount).toFixed(2)}`, r.status, r.dueDate ? new Date(r.dueDate).toLocaleDateString() : "—"]) });
+    return apiSuccess({ columns: ["Pledged Amount", "Paid Amount", "Status", "Due Date"], rows: rows.map(r => [`GH₵${parseFloat(r.pledgedAmount).toFixed(2)}`, `GH₵${parseFloat(r.paidAmount).toFixed(2)}`, r.status, r.dueDate ? new Date(r.dueDate).toLocaleDateString() : "—"]) });
   }
 
   // Fallback / default

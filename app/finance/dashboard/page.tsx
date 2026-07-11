@@ -78,7 +78,7 @@ export default function FinanceDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Total Income"
-          value={loading ? "—" : `$${stats.totalIncome.toFixed(2)}`}
+          value={loading ? "—" : `GH₵${stats.totalIncome.toFixed(2)}`}
           sub="Tithes + Offerings"
           color="bg-green-500/20"
           icon={
@@ -116,7 +116,7 @@ export default function FinanceDashboard() {
         />
         <StatCard
           label="This Month Expenses"
-          value="$0.00"
+          value="GH₵0.00"
           sub="Approved only"
           color="bg-rose-500/20"
           icon={
@@ -136,7 +136,7 @@ export default function FinanceDashboard() {
         />
         <StatCard
           label="Active Pledges"
-          value="$0.00"
+          value="GH₵0.00"
           sub="Outstanding balance"
           color="bg-violet-500/20"
           icon={
@@ -173,7 +173,7 @@ export default function FinanceDashboard() {
                       <p className="text-slate-500 text-xs mt-0.5">Status: pending</p>
                     </div>
                     <span className="text-white font-mono font-semibold">
-                      ${parseFloat(item.amount).toFixed(2)}
+                      GH₵{parseFloat(item.amount).toFixed(2)}
                     </span>
                   </div>
                 ))}

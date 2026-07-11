@@ -180,7 +180,7 @@ export default function IncomePage() {
                     {row.memberId ? members[row.memberId] ?? "Unknown Member" : "N/A (General Offering)"}
                   </td>
                   <td className="px-4 py-3.5 text-white font-mono font-semibold">
-                    ${parseFloat(row.amount).toFixed(2)}
+                    GH₵{parseFloat(row.amount).toFixed(2)}
                   </td>
                   <td className="px-4 py-3.5 text-slate-300 capitalize">
                     {row.paymentMethod.replace("_", " ")}

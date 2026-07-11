@@ -87,7 +87,7 @@ export default function BudgetsPage() {
                     {b.period} ({b.periodLabel})
                   </td>
                   <td className="px-4 py-3.5 text-white font-mono font-semibold">
-                    ${parseFloat(b.totalAmount).toFixed(2)}
+                    GH₵{parseFloat(b.totalAmount).toFixed(2)}
                   </td>
                   <td className="px-4 py-3.5">
                     <span

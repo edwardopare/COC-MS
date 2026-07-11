@@ -137,13 +137,13 @@ export default function PledgesPage() {
                       {members[pledge.memberId] ?? "Unknown Member"}
                     </td>
                     <td className="px-4 py-3.5 text-white font-mono font-semibold">
-                      ${pledged.toFixed(2)}
+                      GH₵{pledged.toFixed(2)}
                     </td>
                     <td className="px-4 py-3.5 text-green-400 font-mono">
-                      ${paid.toFixed(2)}
+                      GH₵{paid.toFixed(2)}
                     </td>
                     <td className="px-4 py-3.5 text-amber-400 font-mono">
-                      ${balance.toFixed(2)}
+                      GH₵{balance.toFixed(2)}
                     </td>
                     <td className="px-4 py-3.5 text-slate-400">
                       {pledge.dueDate ? new Date(pledge.dueDate).toLocaleDateString() : "—"}

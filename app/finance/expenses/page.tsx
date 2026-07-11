@@ -165,7 +165,7 @@ export default function FinanceExpensesPage() {
                     {expense.description}
                   </td>
                   <td className="px-4 py-3.5 text-white font-mono">
-                    ${parseFloat(expense.amount).toFixed(2)}
+                    GH₵{parseFloat(expense.amount).toFixed(2)}
                   </td>
                   <td className="px-4 py-3.5 text-slate-300">
                     {expense.initiatedByFirstName
