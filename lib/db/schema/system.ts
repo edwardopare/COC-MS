@@ -40,7 +40,7 @@ export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   category: documentCategoryEnum("category").notNull(),
-  fileUrl: text("file_url").notNull(), // Vercel Blob URL
+  fileData: text("file_data").notNull().default(""), // Stores raw or base64 file data
   fileType: varchar("file_type", { length: 20 }).notNull(), // pdf, jpg, png
   fileSizeBytes: varchar("file_size_bytes", { length: 20 }),
   relatedEntityType: varchar("related_entity_type", { length: 50 }), // member, expense, etc.
