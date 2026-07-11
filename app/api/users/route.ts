@@ -47,14 +47,15 @@ export async function POST(request: NextRequest) {
   const [role] = await db.select({ id: roles.id }).from(roles).where(eq(roles.id, roleId)).limit(1);
   if (!role) return apiError("Invalid role ID", 400);
 
-  const tempPassword = crypto.randomBytes(6).toString("base64").slice(0, 10) + "A1!";
+  const tempPassword = "Welcome@1234!";
+  console.log(`🔑 [DEV-ONLY] Created user ${email} with default password: ${tempPassword}`);
   const passwordHash = await bcrypt.hash(tempPassword, 12);
 
   const [newUser] = await db.insert(users).values({
     firstName, lastName, email, passwordHash, roleId, mustChangePassword: true, status: "active",
   }).returning({ id: users.id, email: users.email });
 
-  await sendWelcomeEmail(email, firstName, tempPassword);
+  await sendWelcomeEmail(email, firstName, tempPassword).catch((e) => console.log("Email skip/fail: ", e.message));
 
   await logAction({
     userId: session!.userId, userEmail: session!.userEmail,

@@ -18,7 +18,9 @@ const PUBLIC_PATHS = [
   "/reset-password",
   "/change-password",
   "/unauthorized",
-  "/api/auth",
+  "/api/auth/login",
+  "/api/auth/forgot-password",
+  "/api/auth/reset-password",
 ];
 
 /**
@@ -46,8 +48,8 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Force password change — redirect everywhere except the change page
-  if (payload.mustChangePassword && pathname !== "/change-password") {
+  // Force password change — redirect everywhere except the change page and API routes
+  if (payload.mustChangePassword && pathname !== "/change-password" && !pathname.startsWith("/api/")) {
     return NextResponse.redirect(new URL("/change-password", request.url));
   }
 

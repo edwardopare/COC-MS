@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import bcrypt from "bcryptjs";
 import * as schema from "../lib/db/schema";
 
-config({ path: ".env.local" });
+config({ path: ".env" });
 
 const sql = neon(process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });

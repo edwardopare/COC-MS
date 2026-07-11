@@ -26,7 +26,33 @@ export async function GET(request: NextRequest) {
     conditions.push(eq(expenses.initiatedByUserId, session!.userId));
   }
 
-  const rows = await db.select().from(expenses).where(and(...conditions)).orderBy(desc(expenses.createdAt)).limit(50);
+  const rows = await db
+    .select({
+      id: expenses.id,
+      categoryId: expenses.categoryId,
+      branchId: expenses.branchId,
+      amount: expenses.amount,
+      description: expenses.description,
+      documentUrl: expenses.documentUrl,
+      status: expenses.status,
+      initiatedByUserId: expenses.initiatedByUserId,
+      initiatedByFirstName: users.firstName,
+      initiatedByLastName: users.lastName,
+      approvedByUserId: expenses.approvedByUserId,
+      approvedAt: expenses.approvedAt,
+      approvalComments: expenses.approvalComments,
+      paymentMethod: expenses.paymentMethod,
+      paidAt: expenses.paidAt,
+      periodMonth: expenses.periodMonth,
+      createdAt: expenses.createdAt,
+      updatedAt: expenses.updatedAt,
+    })
+    .from(expenses)
+    .leftJoin(users, eq(expenses.initiatedByUserId, users.id))
+    .where(and(...conditions))
+    .orderBy(desc(expenses.createdAt))
+    .limit(50);
+
   return apiSuccess(rows);
 }
 

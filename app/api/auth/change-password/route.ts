@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { requireRole } from "@/lib/api-utils";
 import { logAction, getClientIp } from "@/lib/audit";
+import { signAccessToken, SESSION_COOKIE, cookieOptions } from "@/lib/auth/session";
 import { z } from "zod";
 
 const schema = z.object({
@@ -31,5 +32,14 @@ export async function POST(request: NextRequest) {
 
   await logAction({ userId: session!.userId, userEmail: session!.userEmail, action: "PASSWORD_CHANGED", tableAffected: "users", recordId: session!.userId, ipAddress: getClientIp(request.headers) });
 
-  return NextResponse.json({ success: true });
+  const token = await signAccessToken({
+    userId: session!.userId,
+    email: session!.userEmail,
+    role: session!.role,
+    mustChangePassword: false,
+  });
+
+  const response = NextResponse.json({ success: true });
+  response.cookies.set(SESSION_COOKIE, token, cookieOptions);
+  return response;
 }

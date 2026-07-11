@@ -16,14 +16,28 @@ export default function ChangePasswordPage() {
     if (password !== confirm) { setError("Passwords do not match"); return; }
     if (password.length < 8) { setError("Password must be at least 8 characters"); return; }
     setLoading(true);
-    const res = await fetch("/api/auth/change-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password, confirmPassword: confirm }),
-    });
-    const data = await res.json();
-    if (!res.ok) { setError(data.error ?? "Failed to change password"); setLoading(false); return; }
-    router.replace("/");
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, confirmPassword: confirm }),
+      });
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = { error: "An unexpected server response occurred." };
+      }
+      if (!res.ok) {
+        setError(data.error ?? "Failed to change password");
+        setLoading(false);
+        return;
+      }
+      router.replace("/");
+    } catch {
+      setError("A network error occurred. Please try again.");
+      setLoading(false);
+    }
   }
 
   return (
