@@ -39,11 +39,28 @@ export async function POST(request: NextRequest) {
   const { session, error } = requireRole(request.headers, ["admin_officer", "system_administrator"]);
   if (error) return error;
 
-  let body: unknown;
+  let body: Record<string, unknown>;
   try { body = await request.json(); } catch { return apiError("Invalid body"); }
 
+  // Auto-assign branch if not provided
+  if (!body.branchId) {
+    const [branch] = await db.select().from(branches).limit(1);
+    if (!branch) return apiError("No branch found in the system", 400);
+    body.branchId = branch.id;
+  }
+
+  // Convert checkbox string "true"/"false" to boolean
+  if (typeof body.isBaptized === "string") {
+    body.isBaptized = body.isBaptized === "true";
+  }
+
+  // Strip empty strings for optional fields so Zod treats them as absent
+  for (const key of Object.keys(body)) {
+    if (body[key] === "") delete body[key];
+  }
+
   const parsed = createMemberSchema.safeParse(body);
-  if (!parsed.success) return apiError("Validation failed", 400);
+  if (!parsed.success) return apiError(parsed.error.issues.map(e => `${e.path.join(".")}: ${e.message}`).join(", "), 400);
 
   // Generate unique member ID
   const [seqSetting] = await db.select().from(systemSettings).where(eq(systemSettings.key, "last_member_sequence")).limit(1);

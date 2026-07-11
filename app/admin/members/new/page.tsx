@@ -16,7 +16,7 @@ export default function NewMemberPage() {
     const res = await fetch("/api/members", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const data = await res.json();
     if (!res.ok) { setError(data.error ?? "Failed to register member"); setLoading(false); return; }
-    router.push(`/admin/members/${data.id}`);
+    router.push(`/admin/members`);
   }
 
   const inputCls = "w-full px-3 py-2.5 bg-slate-800 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition";
@@ -45,7 +45,7 @@ export default function NewMemberPage() {
           <div><label className={labelCls}>Gender</label>
             <select name="gender" className={inputCls}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select>
           </div>
-          <div><label className={labelCls}>Date of Birth</label><input name="dateOfBirth" type="date" className={inputCls} /></div>
+          <div><label className={labelCls}>Date of Birth</label><input name="dateOfBirth" type="date" max={new Date().toISOString().split("T")[0]} className={inputCls} /></div>
           <div><label className={labelCls}>Marital Status</label>
             <select name="maritalStatus" className={inputCls}><option value="">Select</option><option value="single">Single</option><option value="married">Married</option><option value="widowed">Widowed</option><option value="divorced">Divorced</option></select>
           </div>
@@ -55,7 +55,7 @@ export default function NewMemberPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div><label className={labelCls}>Occupation</label><input name="occupation" className={inputCls} placeholder="Teacher, Engineer…" /></div>
-          <div><label className={labelCls}>Join Date</label><input name="joinDate" type="date" className={inputCls} /></div>
+          <div><label className={labelCls}>Join Date</label><input name="joinDate" type="date" max={new Date().toISOString().split("T")[0]} className={inputCls} /></div>
         </div>
 
         <div className="flex items-center gap-3">

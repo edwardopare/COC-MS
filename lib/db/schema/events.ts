@@ -5,6 +5,7 @@ import {
   boolean,
   timestamp,
   integer,
+  decimal,
   uuid,
   pgEnum,
 } from "drizzle-orm/pg-core";
@@ -53,17 +54,19 @@ export const events = pgTable("events", {
 
 export const attendance = pgTable("attendance", {
   id: uuid("id").primaryKey().defaultRandom(),
-  eventId: uuid("event_id")
-    .notNull()
-    .references(() => events.id),
   branchId: uuid("branch_id")
     .notNull()
     .references(() => branches.id),
-  memberId: uuid("member_id").references(() => members.id), // null = walk-in/headcount
-  headcount: integer("headcount"), // used when not tracking individual members
-  isPresent: boolean("is_present").default(true),
-  recordedByUserId: uuid("recorded_by_user_id").notNull(),
+  serviceType: varchar("service_type", { length: 50 }).notNull(),
+  attendanceDate: timestamp("attendance_date").notNull(),
+  maleCount: integer("male_count").notNull().default(0),
+  femaleCount: integer("female_count").notNull().default(0),
+  childrenCount: integer("children_count").notNull().default(0),
+  visitorsCount: integer("visitors_count").notNull().default(0),
+  totalCount: integer("total_count").notNull().default(0),
+  offertoryAmount: decimal("offertory_amount", { precision: 15, scale: 2 }).notNull().default("0"),
   notes: text("notes"),
+  recordedByUserId: uuid("recorded_by_user_id").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -71,12 +74,10 @@ export const attendance = pgTable("attendance", {
 // Relations
 // ─────────────────────────────────────────────────────────
 
-export const eventsRelations = relations(events, ({ one, many }) => ({
+export const eventsRelations = relations(events, ({ one }) => ({
   branch: one(branches, { fields: [events.branchId], references: [branches.id] }),
-  attendance: many(attendance),
 }));
 
 export const attendanceRelations = relations(attendance, ({ one }) => ({
-  event: one(events, { fields: [attendance.eventId], references: [events.id] }),
-  member: one(members, { fields: [attendance.memberId], references: [members.id] }),
+  // No strict relations here in MVP as we removed memberId/eventId linkage
 }));

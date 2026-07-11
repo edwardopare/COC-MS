@@ -76,6 +76,7 @@ export default function ReportsPage() {
             <label className="block text-sm font-medium text-slate-300 mb-1.5">From Date</label>
             <input
               type="date"
+              max={new Date().toISOString().split("T")[0]}
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -85,6 +86,7 @@ export default function ReportsPage() {
             <label className="block text-sm font-medium text-slate-300 mb-1.5">To Date</label>
             <input
               type="date"
+              max={new Date().toISOString().split("T")[0]}
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-900 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"

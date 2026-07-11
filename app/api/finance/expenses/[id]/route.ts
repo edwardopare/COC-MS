@@ -80,3 +80,29 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   return apiSuccess({ id, status: newStatus });
 }
+
+// PATCH /api/finance/expenses/[id] — edit pending expense details
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const { session, error } = requireRole(request.headers, ["admin_officer", "system_administrator"]);
+  if (error) return error;
+
+  let body: Record<string, unknown>;
+  try { body = await request.json(); } catch { return apiError("Invalid body"); }
+
+  const [expense] = await db.select().from(expenses).where(eq(expenses.id, id)).limit(1);
+  if (!expense) return apiError("Expense not found", 404);
+  if (expense.status !== "pending") return apiError("Only pending expenses can be edited", 400);
+
+  const updateData: Record<string, unknown> = {};
+  if (body.description) updateData.description = body.description;
+  if (body.amount) updateData.amount = body.amount;
+  if (body.periodMonth) updateData.periodMonth = body.periodMonth;
+  updateData.updatedAt = new Date();
+
+  const [updated] = await db.update(expenses).set(updateData).where(eq(expenses.id, id)).returning();
+
+  await logAction({ userId: session!.userId, userEmail: session!.userEmail, action: "EXPENSE_UPDATED", tableAffected: "expenses", recordId: id, oldValues: expense, newValues: updateData, ipAddress: getClientIp(request.headers) });
+
+  return apiSuccess(updated);
+}
