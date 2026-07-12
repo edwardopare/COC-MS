@@ -138,7 +138,7 @@ export default function IncomePage() {
         <table className="w-full text-sm text-left">
           <thead>
             <tr className="border-b border-white/5 bg-slate-900/30">
-              <th className="px-4 py-3 text-slate-400 font-medium">Receipt #</th>
+              <th className="px-4 py-3 text-slate-400 font-medium">Timestamp</th>
               <th className="px-4 py-3 text-slate-400 font-medium">Type</th>
               <th className="px-4 py-3 text-slate-400 font-medium">Member</th>
               <th className="px-4 py-3 text-slate-400 font-medium">Amount</th>
@@ -163,7 +163,7 @@ export default function IncomePage() {
               filteredIncome.map((row) => (
                 <tr key={row.id} className="border-b border-white/5 hover:bg-white/5 transition">
                   <td className="px-4 py-3.5 text-indigo-400 font-mono text-xs font-semibold">
-                    {row.receiptNumber ?? "—"}
+                    {new Date(row.createdAt).toLocaleString()}
                   </td>
                   <td className="px-4 py-3.5 text-white font-medium">
                     <span

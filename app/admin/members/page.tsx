@@ -238,7 +238,7 @@ export default function MembersPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-slate-400">
-                    {new Date(member.createdAt).toLocaleDateString()}
+                    {member.joinDate ? new Date(member.joinDate).toLocaleDateString() : new Date(member.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3.5 text-right">
                     <button

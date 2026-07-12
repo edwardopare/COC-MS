@@ -93,7 +93,6 @@ export async function POST(request: NextRequest) {
       paymentMethod: "cash",
       recordedByUserId: session!.userId,
       notes: `Auto-recorded from ${serviceName} attendance on ${date}`,
-      createdAt: new Date(date),
     });
   }
 

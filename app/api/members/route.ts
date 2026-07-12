@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   const where = conditions.length > 0 ? and(...conditions) : undefined;
 
   const [rows, [total]] = await Promise.all([
-    db.select({ id: members.id, memberId: members.memberId, firstName: members.firstName, lastName: members.lastName, phone: members.phone, email: members.email, memberStatus: members.memberStatus, branchId: members.branchId, createdAt: members.createdAt }).from(members).where(where).orderBy(desc(members.createdAt)).limit(limit).offset(offset),
+    db.select({ id: members.id, memberId: members.memberId, firstName: members.firstName, lastName: members.lastName, phone: members.phone, email: members.email, memberStatus: members.memberStatus, branchId: members.branchId, joinDate: members.joinDate, createdAt: members.createdAt }).from(members).where(where).orderBy(desc(members.createdAt)).limit(limit).offset(offset),
     db.select({ count: count() }).from(members).where(where),
   ]);
 
